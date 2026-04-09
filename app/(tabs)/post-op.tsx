@@ -47,7 +47,9 @@ export default function MobilePostOpScreen() {
 
   const scopedPatients = useMemo(() => {
     if (!user) return [];
-    return user.role === 'Admin' ? patients : patients.filter((p) => p.centreCode === user.centre.code);
+    return user.role === 'Admin' || user.role === 'Super Admin'
+      ? patients
+      : patients.filter((p) => p.centreCode === user.centre.code);
   }, [patients, user]);
 
   const patientSurgeries = useMemo(() => surgeries.filter((s) => s.patientId === patientId), [surgeries, patientId]);

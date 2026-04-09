@@ -14,7 +14,9 @@ export default function MobileHomeScreen() {
 
   const stats = useMemo(() => {
     if (!user) return { total: 0, today: 0, pending: 0 };
-    const scoped = user.role === 'Admin' ? patients : patients.filter((p) => p.centreCode === user.centre.code);
+    const scoped = user.role === 'Admin' || user.role === 'Super Admin'
+      ? patients
+      : patients.filter((p) => p.centreCode === user.centre.code);
     const today = new Date().toISOString().slice(0, 10);
     const todayCount = scoped.filter((p) => p.createdAt.slice(0, 10) === today).length;
     const scopedPost = postOps.filter((p) => p.centreCode === user.centre.code);

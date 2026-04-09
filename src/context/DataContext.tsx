@@ -206,7 +206,7 @@ export function MobileDataProvider({ children }: { children: React.ReactNode }) 
     try {
       const list = await mobileApi.patients.list({
         q: params?.q,
-        centreId: user.role === 'Admin' ? undefined : user.centre.id,
+        centreId: user.role === 'Admin' || user.role === 'Super Admin' ? undefined : user.centre.id,
         page: 1,
         limit: 50,
       });

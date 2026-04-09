@@ -35,7 +35,9 @@ export default function MobileConsultScreen() {
 
   const scopedPatients = useMemo(() => {
     if (!user) return [];
-    return user.role === 'Admin' ? patients : patients.filter((p) => p.centreCode === user.centre.code);
+    return user.role === 'Admin' || user.role === 'Super Admin'
+      ? patients
+      : patients.filter((p) => p.centreCode === user.centre.code);
   }, [patients, user]);
 
   const patientHistory = useMemo(() => consultations.filter((c) => c.patientId === patientId).slice(0, 6), [consultations, patientId]);

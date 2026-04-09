@@ -18,7 +18,9 @@ export default function MobilePatientsScreen() {
 
   const scopedPatients = useMemo(() => {
     if (!user) return [];
-    const scoped = user.role === 'Admin' ? patients : patients.filter((p) => p.centreCode === user.centre.code);
+    const scoped = user.role === 'Admin' || user.role === 'Super Admin'
+      ? patients
+      : patients.filter((p) => p.centreCode === user.centre.code);
     const q = query.trim().toLowerCase();
     if (!q) return scoped;
     return scoped.filter((p) => {
