@@ -28,7 +28,7 @@ type DataContextValue = {
   lastSyncedAt: string | null;
   syncError: string | null;
   loadPatients: (params?: { q?: string }) => Promise<void>;
-  addPatient: (patient: Omit<Patient, 'id' | 'patientCode' | 'createdAt' | 'centreCode' | 'centreName'>) => Promise<Patient>;
+  addPatient: (patient: AddPatientInput) => Promise<Patient>;
   loadVaRecords: (patientId: string) => Promise<void>;
   addVaRecord: (record: Omit<VaRecord, 'id' | 'recordedAt' | 'centreCode'>) => Promise<void>;
   loadConsultations: (patientId: string) => Promise<void>;
@@ -37,6 +37,12 @@ type DataContextValue = {
   loadPostOps: (surgeryId: string) => Promise<void>;
   addPostOp: (record: Omit<PostOpRecord, 'id' | 'centreCode'>) => Promise<void>;
   syncNow: () => Promise<void>;
+};
+
+type AddPatientInput = Omit<Patient, 'id' | 'patientCode' | 'createdAt' | 'centreCode' | 'centreName'> & {
+  photoUri?: string;
+  photoName?: string;
+  photoType?: string;
 };
 
 const DataContext = createContext<DataContextValue | undefined>(undefined);
@@ -210,22 +216,35 @@ export function MobileDataProvider({ children }: { children: React.ReactNode }) 
     }
   };
 
-  const addPatient = async (
-    input: Omit<Patient, 'id' | 'patientCode' | 'createdAt' | 'centreCode' | 'centreName'>,
-  ): Promise<Patient> => {
+  const addPatient = async (input: AddPatientInput): Promise<Patient> => {
     setIsSaving(true);
     try {
-      const created = await mobileApi.patients.create({
-        firstName: input.firstName,
-        surname: input.surname,
-        age: input.age,
-        sex: input.sex,
-        phone: input.phone,
-        lgaTown: input.lgaTown,
-        state: input.state,
-        disabilityType: input.disabilityType,
-        outreachCentreName: input.outreachCentreName,
-      });
+      const created = input.photoUri
+        ? await mobileApi.patients.createWithPhoto({
+            firstName: input.firstName,
+            surname: input.surname,
+            age: input.age,
+            sex: input.sex,
+            phone: input.phone,
+            lgaTown: input.lgaTown,
+            state: input.state,
+            disabilityType: input.disabilityType,
+            outreachCentreName: input.outreachCentreName,
+            photoUri: input.photoUri,
+            photoName: input.photoName,
+            photoType: input.photoType,
+          })
+        : await mobileApi.patients.create({
+            firstName: input.firstName,
+            surname: input.surname,
+            age: input.age,
+            sex: input.sex,
+            phone: input.phone,
+            lgaTown: input.lgaTown,
+            state: input.state,
+            disabilityType: input.disabilityType,
+            outreachCentreName: input.outreachCentreName,
+          });
       setPatients((prev) => [created, ...prev]);
       return created;
     } catch {
@@ -243,6 +262,7 @@ export function MobileDataProvider({ children }: { children: React.ReactNode }) 
         lgaTown: input.lgaTown,
         state: input.state ?? '',
         outreachCentreName: input.outreachCentreName,
+        photo: input.photoUri,
         disabilityType: input.disabilityType,
         createdAt: new Date().toISOString(),
         createdBy: input.createdBy,
