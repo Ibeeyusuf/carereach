@@ -356,12 +356,8 @@ export function MobileDataProvider({ children }: { children: React.ReactNode }) 
       const created = await mobileApi.consultations.create(record.patientId, {
         consultationDate: record.consultationDate,
         healthPractitioner: record.healthPractitioner,
-        chiefComplaint: record.chiefComplaint,
-        historyOfPresentIllness: record.historyOfPresentIllness,
         anteriorSegment: record.anteriorSegment,
         posteriorSegment: record.posteriorSegment,
-        diagnosis: record.diagnosis,
-        treatmentPlan: record.treatmentPlan,
         surgeryRecommended: record.surgeryRecommended,
       });
       setConsultations((prev) => [created, ...prev]);
@@ -372,12 +368,8 @@ export function MobileDataProvider({ children }: { children: React.ReactNode }) 
         patientId: record.patientId,
         consultationDate: record.consultationDate,
         healthPractitioner: record.healthPractitioner,
-        chiefComplaint: record.chiefComplaint,
-        historyOfPresentIllness: record.historyOfPresentIllness,
         anteriorSegment: record.anteriorSegment,
         posteriorSegment: record.posteriorSegment,
-        diagnosis: record.diagnosis,
-        treatmentPlan: record.treatmentPlan,
         surgeryRecommended: record.surgeryRecommended,
         centreCode: user?.centre.code ?? '',
       };
@@ -391,13 +383,8 @@ export function MobileDataProvider({ children }: { children: React.ReactNode }) 
           patientId: record.patientId,
           consultationDate: record.consultationDate,
           healthPractitioner: record.healthPractitioner,
-          chiefComplaint: record.chiefComplaint,
-          historyOfPresentIllness: record.historyOfPresentIllness,
           anteriorSegment: record.anteriorSegment,
           posteriorSegment: record.posteriorSegment,
-          diagnosis: record.diagnosis,
-          diagnosisItems: [record.diagnosis],
-          treatmentPlan: record.treatmentPlan,
           surgeryRecommended: record.surgeryRecommended,
         },
       });

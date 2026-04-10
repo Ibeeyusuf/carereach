@@ -11,12 +11,8 @@ export default function MobileConsultScreen() {
 
   const [patientId, setPatientId] = useState('');
   const [practitioner, setPractitioner] = useState('Ophthalmologist');
-  const [chiefComplaint, setChiefComplaint] = useState('');
-  const [history, setHistory] = useState('');
   const [anterior, setAnterior] = useState('');
   const [posterior, setPosterior] = useState('');
-  const [diagnosis, setDiagnosis] = useState('');
-  const [plan, setPlan] = useState('');
   const [surgeryRecommended, setSurgeryRecommended] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
@@ -43,7 +39,7 @@ export default function MobileConsultScreen() {
   const patientHistory = useMemo(() => consultations.filter((c) => c.patientId === patientId).slice(0, 6), [consultations, patientId]);
 
   const onSave = async () => {
-    if (!patientId || !chiefComplaint.trim() || !history.trim() || !anterior.trim() || !posterior.trim() || !diagnosis.trim() || !plan.trim()) {
+    if (!patientId || !anterior.trim() || !posterior.trim()) {
       Alert.alert('Validation', 'Please complete required fields.');
       return;
     }
@@ -53,21 +49,13 @@ export default function MobileConsultScreen() {
         patientId,
         consultationDate: new Date().toISOString(),
         healthPractitioner: practitioner,
-        chiefComplaint: chiefComplaint.trim(),
-        historyOfPresentIllness: history.trim(),
         anteriorSegment: anterior.trim(),
         posteriorSegment: posterior.trim(),
-        diagnosis: diagnosis.trim(),
-        treatmentPlan: plan.trim(),
         surgeryRecommended,
       });
 
-      setChiefComplaint('');
-      setHistory('');
       setAnterior('');
       setPosterior('');
-      setDiagnosis('');
-      setPlan('');
       setSurgeryRecommended(false);
       Alert.alert('Saved', 'Consultation saved successfully.');
       setIsLoadingHistory(true);
@@ -92,12 +80,8 @@ export default function MobileConsultScreen() {
 
       <Text style={styles.section}>Practitioner</Text>
       <TextInput value={practitioner} onChangeText={setPractitioner} style={styles.input} />
-      <TextInput value={chiefComplaint} onChangeText={setChiefComplaint} placeholder="Chief complaint" style={[styles.input, styles.textArea]} multiline textAlignVertical="top" />
-      <TextInput value={history} onChangeText={setHistory} placeholder="History of present illness" style={[styles.input, styles.textArea]} multiline textAlignVertical="top" />
       <TextInput value={anterior} onChangeText={setAnterior} placeholder="Anterior segment" style={[styles.input, styles.textArea]} multiline textAlignVertical="top" />
       <TextInput value={posterior} onChangeText={setPosterior} placeholder="Posterior segment" style={[styles.input, styles.textArea]} multiline textAlignVertical="top" />
-      <TextInput value={diagnosis} onChangeText={setDiagnosis} placeholder="Diagnosis" style={[styles.input, styles.textArea]} multiline textAlignVertical="top" />
-      <TextInput value={plan} onChangeText={setPlan} placeholder="Treatment plan" style={[styles.input, styles.textArea]} multiline textAlignVertical="top" />
 
       <Pressable onPress={() => setSurgeryRecommended((v) => !v)} style={[styles.toggleCard, surgeryRecommended && styles.toggleCardActive]}>
         <Text style={[styles.toggleTitle, surgeryRecommended && styles.toggleTitleActive]}>Recommend Surgery</Text>
@@ -116,7 +100,8 @@ export default function MobileConsultScreen() {
       ) : patientHistory.length === 0 ? <Text style={styles.muted}>No history yet.</Text> : patientHistory.map((r) => (
         <View key={r.id} style={styles.historyCard}>
           <Text style={styles.historyTop}>{new Date(r.consultationDate).toLocaleDateString()}</Text>
-          <Text style={styles.historyMeta}>{r.diagnosis}</Text>
+          <Text style={styles.historyMeta}>Anterior: {r.anteriorSegment}</Text>
+          <Text style={styles.historyMeta}>Posterior: {r.posteriorSegment}</Text>
           {r.surgeryRecommended ? <Text style={styles.tag}>Surgery Recommended</Text> : null}
         </View>
       ))}

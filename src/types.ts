@@ -49,12 +49,8 @@ export interface ConsultationRecord {
   patientId: string;
   consultationDate: string;
   healthPractitioner: string;
-  chiefComplaint: string;
-  historyOfPresentIllness: string;
   anteriorSegment: string;
   posteriorSegment: string;
-  diagnosis: string;
-  treatmentPlan: string;
   surgeryRecommended: boolean;
   centreCode: string;
 }

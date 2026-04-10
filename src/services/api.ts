@@ -229,12 +229,8 @@ function mapConsultation(item: any): ConsultationRecord {
     patientId: item.patientId,
     consultationDate: item.consultationDate,
     healthPractitioner: item.healthPractitioner ?? 'Health Practitioner',
-    chiefComplaint: item.chiefComplaint,
-    historyOfPresentIllness: item.historyOfPresentIllness,
     anteriorSegment: item.anteriorSegment,
     posteriorSegment: item.posteriorSegment,
-    diagnosis: item.diagnosis,
-    treatmentPlan: item.treatmentPlan,
     surgeryRecommended: Boolean(item.surgeryRecommended),
     centreCode: item.centre?.code ?? '',
   };
@@ -458,17 +454,12 @@ export const mobileApi = {
     async create(patientId: string, payload: {
       consultationDate: string;
       healthPractitioner?: string;
-      chiefComplaint: string;
-      historyOfPresentIllness: string;
       anteriorSegment: string;
       posteriorSegment: string;
-      diagnosis: string;
-      treatmentPlan: string;
       surgeryRecommended: boolean;
     }): Promise<ConsultationRecord> {
       const created = await apiRequest<any>(`/patients/${patientId}/consultations`, 'POST', {
         ...payload,
-        diagnosisItems: [payload.diagnosis],
       });
       return mapConsultation(created);
     },
